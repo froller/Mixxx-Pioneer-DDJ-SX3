@@ -6634,6 +6634,46 @@
                     <script-binding/>
                 </options>
             </control>
+            <control>
+                <group>[Master]</group>
+                <key>PioneerDDJSX3.soundColorFXButton</key>
+                <description>Sound Color FX Echo Select</description>
+                <status>0x96</status>
+                <midino>0x00</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>PioneerDDJSX3.soundColorFXButton</key>
+                <description>Sound Color FX Filter Select</description>
+                <status>0x96</status>
+                <midino>0x01</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>PioneerDDJSX3.soundColorFXButton</key>
+                <description>Sound Color FX Noise Select</description>
+                <status>0x96</status>
+                <midino>0x02</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Master]</group>
+                <key>PioneerDDJSX3.soundColorFXButton</key>
+                <description>Sound Color FX Jet Select</description>
+                <status>0x96</status>
+                <midino>0x03</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
         </controls>
         <outputs/>
     </controller>
