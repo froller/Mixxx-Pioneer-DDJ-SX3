@@ -312,7 +312,7 @@ PioneerDDJSX3.init = function(id) {
     midi.sendSysexMsg(PioneerDDJSX3.Serato_SYSEX1,PioneerDDJSX3.Serato_SYSEX1.length);
 
     // create Serato keep-alive timer - required for white jog wheel spinner LEDs to work
-    PioneerDDJSX3.keepaliveTimer=engine.beginTimer(250,"PioneerDDJSX3.keepSeratoalive",0);
+    PioneerDDJSX3.keepaliveTimer=engine.beginTimer(250, PioneerDDJSX3.keepSeratoalive, 0);
 
     PioneerDDJSX3.scratchSettings = {
         'alpha': 1.0 / 8,
@@ -509,12 +509,12 @@ PioneerDDJSX3.init = function(id) {
         'minVal': 0x00,
         'maxVal': 0x48
     };
-	
-	PioneerDDJSX3.wheelCentreLed = {
+    
+    PioneerDDJSX3.wheelCentreLed = {
         'minVal': 0x00,
         'maxVal': 0x07
     };
-	
+    
     PioneerDDJSX3.valueVuMeter = {
         '[Channel1]_current': 0,
         '[Channel2]_current': 0,
@@ -525,9 +525,9 @@ PioneerDDJSX3.init = function(id) {
         '[Channel3]_enabled': 1,
         '[Channel4]_enabled': 1
     };
-
+    
     // change resonance of filter
-	for (var i=0; i<4; i++) {
+    for (var i=0; i<4; i++) {
         engine.setValue("[QuickEffectRack1_[Channel"+(i+1)+"]_Effect1]","parameter2",PioneerDDJSX3.Resonance);
     }
 
@@ -570,7 +570,7 @@ PioneerDDJSX3.init = function(id) {
 
     // activate vu meter timer for Auto DJ:
     if (PioneerDDJSX3.twinkleVumeterAutodjOn) {
-        PioneerDDJSX3.vuMeterTimer = engine.beginTimer(200, "PioneerDDJSX3.vuMeterTwinkle()");
+        PioneerDDJSX3.vuMeterTimer = engine.beginTimer(200, PioneerDDJSX3.vuMeterTwinkle);
     }
 
     // initiate control status request:   Tristan disabled this - is it really required if we're in serato mode?
@@ -790,7 +790,7 @@ PioneerDDJSX3.autoDJToggleSyncKey = function(channel, control, value, status, gr
 
 PioneerDDJSX3.autoDJTimer = function(value, group, control) {
     if (value) {
-        PioneerDDJSX3.autoDJTickTimer = engine.beginTimer(PioneerDDJSX3.autoDJTickInterval, "PioneerDDJSX3.autoDJControl()");
+        PioneerDDJSX3.autoDJTickTimer = engine.beginTimer(PioneerDDJSX3.autoDJTickInterval, PioneerDDJSX3.autoDJControl);
     } else if (PioneerDDJSX3.autoDJTickTimer) {
         engine.stopTimer(PioneerDDJSX3.autoDJTickTimer);
         PioneerDDJSX3.autoDJTickTimer = 0;
@@ -924,7 +924,7 @@ PioneerDDJSX3.bindDeckControlConnections = function(channelGroup, bind) {
             'playposition': 'PioneerDDJSX3.wheelLeds',
             'pfl': 'PioneerDDJSX3.headphoneCueLed',
             'bpm_tap': 'PioneerDDJSX3.shiftHeadphoneCueLed',
-            'VuMeter': 'PioneerDDJSX3.VuMeterLeds',
+            'vu_meter': 'PioneerDDJSX3.VuMeterLeds',
             'keylock': 'PioneerDDJSX3.keyLockLed',
             'slip_enabled': 'PioneerDDJSX3.slipLed',
             'quantize': 'PioneerDDJSX3.quantizeLed',
@@ -945,7 +945,7 @@ PioneerDDJSX3.bindDeckControlConnections = function(channelGroup, bind) {
         };
 
     for (i = 1; i <= 8; i++) {
-        controlsToFunctions["hotcue_" + i + "_enabled"] = "PioneerDDJSX3.hotCueLeds";
+        controlsToFunctions["hotcue_" + i + "_status"] = "PioneerDDJSX3.hotCueLeds";
     }
 
     for (index in PioneerDDJSX3.selectedLoopIntervals[deck]) {
@@ -1027,7 +1027,7 @@ PioneerDDJSX3.initDeck = function(group) {
         false
     );
     PioneerDDJSX3.wheelLedControl(group, PioneerDDJSX3.wheelLedCircle.minVal);
-	PioneerDDJSX3.wheelCentreLedControl(group, PioneerDDJSX3.wheelCentreLed.minVal);
+    PioneerDDJSX3.wheelCentreLedControl(group, PioneerDDJSX3.wheelCentreLed.minVal);
     PioneerDDJSX3.nonPadLedControl(group, PioneerDDJSX3.nonPadLeds.hotCueMode, true); // set HOT CUE Pad-Mode
 };
 
@@ -1036,7 +1036,7 @@ PioneerDDJSX3.resetDeck = function(group) {
 
     PioneerDDJSX3.VuMeterLeds(0x00, group, 0x00); // reset VU meter Leds
     PioneerDDJSX3.wheelLedControl(group, PioneerDDJSX3.wheelLedCircle.minVal); // reset jogwheel Leds
-	PioneerDDJSX3.wheelCentreLedControl(group, PioneerDDJSX3.wheelCentreLed.minVal); // reset jogwheel centre red Leds
+    PioneerDDJSX3.wheelCentreLedControl(group, PioneerDDJSX3.wheelCentreLed.minVal); // reset jogwheel centre red Leds
     PioneerDDJSX3.nonPadLedControl(group, PioneerDDJSX3.nonPadLeds.hotCueMode, true); // reset HOT CUE Pad-Mode
     // pad Leds:
     for (var i = 0; i < 8; i++) {
@@ -1872,7 +1872,7 @@ PioneerDDJSX3.syncAssertLongPress = function() {
 
 PioneerDDJSX3.syncDown = function(control, group) {
     PioneerDDJSX3.syncLongPress = false;
-    PioneerDDJSX3.syncTimer = engine.beginTimer(500, "PioneerDDJSX3.syncAssertLongPress()", true);
+    PioneerDDJSX3.syncTimer = engine.beginTimer(500, PioneerDDJSX3.syncAssertLongPress, true);
     engine.setValue(group, 'sync_enabled', true);
 };
 
@@ -1966,29 +1966,39 @@ PioneerDDJSX3.shiftPanelSelectButton = function(channel, control, value, status,
 };
 
 PioneerDDJSX3.pitchUpButton = function(channel, control, value, status, group) {
-if (value) {
+    if (value) {
         engine.setValue(group, "pitch_up", true);
     }
 }
 
 PioneerDDJSX3.pitchDownButton = function(channel, control, value, status, group) {
-if (value) {
+    if (value) {
         engine.setValue(group, "pitch_down", true);
     }
 }
 
 PioneerDDJSX3.pitchResetButton = function(channel, control, value, status, group) {
-if (value) {
+    if (value) {
         engine.setValue(group, "reset_key", true);
     }
 }
 
 PioneerDDJSX3.pitchSyncButton = function(channel, control, value, status, group) {
-if (value) {
+    if (value) {
         engine.setValue(group, "sync_key", true);
     }
 }
 
+PioneerDDJSX3.soundColorFXButton = function(channel, control, value, status, group) {
+    var effectEnabled;
+    if (control == 0x01)
+        effectEnabled = true;
+    else
+        effectEnabled = value == 0x00;
+    for (i = 0; i < 4; ++i) {
+        engine.setParameter("[QuickEffectRack1_[Channel" + (i + 1) + "]_Effect1]", "enabled", effectEnabled);
+    }
+};
 
 ///////////////////////////////////////////////////////////////
 //                          LED HELPERS                      //
@@ -2470,7 +2480,7 @@ PioneerDDJSX3.hotCueLeds = function(value, group, control) {
         hotCueNum;
 
     for (hotCueNum = 1; hotCueNum <= 8; hotCueNum++) {
-        if (control === "hotcue_" + hotCueNum + "_enabled") {
+        if (control === "hotcue_" + hotCueNum + "_status") {
             padNum = (hotCueNum - 1);
             PioneerDDJSX3.padLedControl(group, PioneerDDJSX3.ledGroups.hotCue, padNum, false, value);
             PioneerDDJSX3.padLedControl(group, PioneerDDJSX3.ledGroups.hotCue, padNum, true, value);
@@ -2487,7 +2497,7 @@ PioneerDDJSX3.VuMeterLeds = function(value, group, control) {
     // scale Mixxx vuMeter to fit the 46 DDJ-SX3 meter values, offset by 6 because peak LED has 6 values
     value = parseInt(value * 0x2D) - 0x06; //highest value used for level indicator: 0x2E
 
-    if (engine.getValue(group, "PeakIndicator")) {
+    if (engine.getValue(group, "peak_indicator")) {
         value = value + 0x06;
     }
 
