@@ -1989,6 +1989,8 @@ PioneerDDJSX3.pitchSyncButton = function(channel, control, value, status, group)
 }
 
 PioneerDDJSX3.soundColorFXButton = function(channel, control, value, status, group) {
+    console.info("Sound Color FX: " + channel + " " + control + " " + value + " " +status + " " + group);
+/*
     var effectEnabled;
     if (control == 0x01)
         effectEnabled = true;
@@ -1996,6 +1998,14 @@ PioneerDDJSX3.soundColorFXButton = function(channel, control, value, status, gro
         effectEnabled = value == 0x00;
     for (i = 0; i < 4; ++i) {
         engine.setParameter("[QuickEffectRack1_[Channel" + (i + 1) + "]_Effect1]", "enabled", effectEnabled);
+    }
+*/
+    const effectNames = ['Effect2', 'Effect1', 'Effect3', 'Effect4']; // 'Echo', 'Filter', 'Noise', 'Jet'
+    const effectEnabled = value == 0x7F
+    for (i = 1; i < 5; ++i) {
+        console.info("[QuickEffectRack1_[Channel" + i + "]_Effect1].enabled = " + (!effectEnabled).toString());
+        engine.setValue("[QuickEffectRack1_[Channel" + i + "]]", "enabled", !effectEnabled);
+        engine.setParameter("[QuickEffectRack1_[Channel" + i + "]_Effect2]", "enabled", effectEnabled);
     }
 };
 
