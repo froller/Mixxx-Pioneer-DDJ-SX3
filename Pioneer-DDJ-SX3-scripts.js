@@ -1716,13 +1716,12 @@ PioneerDDJSX3.keyLockButton = function(channel, control, value, status, group) {
 };
 
 PioneerDDJSX3.shiftKeyLockButton = function(channel, control, value, status, group) {
-    var deck = PioneerDDJSX3.channelGroups[group],
-        range = engine.getValue(group, "rateRange");
+    var range = engine.getValue(group, "rateRange");
 
     PioneerDDJSX3.nonPadLedControl(group, PioneerDDJSX3.nonPadLeds.shiftKeyLock, value);
 
     if (range === 0.90) {
-        range = PioneerDDJSX3.setUpSpeedSliderRange[deck];
+        range = 0.08;
     } else if ((range * 2) > 0.90) {
         range = 0.90;
     } else {
